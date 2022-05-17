@@ -37,10 +37,7 @@ func StringSum(input string) (output string, err error) {
 
 	result := 0
 	for i := 0; i < len(res)-1; i++ {
-		x, err1 := strconv.Atoi(res[i+1])
-		if err1 != nil {
-			return "", fmt.Errorf("%w", err1)
-		}
+		x, _ := strconv.Atoi(res[i+1])
 		if res[i] == "-" {
 			result = result - x
 			i++
@@ -51,10 +48,7 @@ func StringSum(input string) (output string, err error) {
 			i++
 			continue
 		}
-		z, err2 := strconv.Atoi(res[i])
-		if err2 != nil {
-			return "", fmt.Errorf("%w", err2)
-		}
+		z, _ := strconv.Atoi(res[i])
 		result = result + z
 	}
 	return strconv.Itoa(result), nil
