@@ -25,9 +25,11 @@ func StringSum(input string) (output string, err error) {
 
 	incorrectReg, _ := regexp.Compile(`[^\-|^\+|^\d|^[:space:]]`)
 	incorrectArg := incorrectReg.FindAllString(input, -1)
-	_, errArg1 := strconv.Atoi(incorrectArg[0])
-	if errArg1 != nil {
-		return "", fmt.Errorf("%w", errArg1)
+	if len(incorrectArg) > 0 {
+		_, errArg1 := strconv.Atoi(incorrectArg[0])
+		if errArg1 != nil {
+			return "", fmt.Errorf("%w", errArg1)
+		}
 	}
 
 	re, _ := regexp.Compile(`\-|\+|\d+.`)
