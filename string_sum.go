@@ -22,7 +22,7 @@ var (
 
 func StringSum(input string) (output string, err error) {
 	incorrectReg := `[^\-|^\+|^\d|^[:space:]]`
-	numReg, _ := regexp.Compile(`\d`)
+	numReg, _ := regexp.Compile(`\d+`)
 	myError := MyCustomError{Message: "input contains characters, that are not numbers, +, - or whitespace"}
 	if len(input) < 1 || input == " " {
 		return "", fmt.Errorf("%w", errorEmptyInput)
@@ -36,7 +36,7 @@ func StringSum(input string) (output string, err error) {
 		return "", fmt.Errorf("%s", myError.Error())
 	}
 
-	re, _ := regexp.Compile(`\-|\+|\d`)
+	re, _ := regexp.Compile(`\-|\+|\d+`)
 	res := re.FindAllString(input, -1)
 
 	result := 0
