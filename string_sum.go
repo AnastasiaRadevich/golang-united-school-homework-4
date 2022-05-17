@@ -2,26 +2,58 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"regexp"
+	"strconv"
 )
 
-//use these errors as appropriate, wrapping them with fmt.Errorf function
+type MyCustomError struct {
+	Message string
+}
+
+func (m MyCustomError) Error() string {
+	return m.Message
+}
+
 var (
-	// Use when the input is empty, and input is considered empty if the string contains only whitespace
-	errorEmptyInput = errors.New("input is empty")
-	// Use when the expression has number of operands not equal to two
+	errorEmptyInput     = errors.New("input is empty")
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
 )
 
-// Implement a function that computes the sum of two int numbers written as a string
-// For example, having an input string "3+5", it should return output string "8" and nil error
-// Consider cases, when operands are negative ("-3+5" or "-3-5") and when input string contains whitespace (" 3 + 5 ")
-//
-//For the cases, when the input expression is not valid(contains characters, that are not numbers, +, - or whitespace)
-// the function should return an empty string and an appropriate error from strconv package wrapped into your own error
-// with fmt.Errorf function
-//
-// Use the errors defined above as described, again wrapping into fmt.Errorf
-
 func StringSum(input string) (output string, err error) {
-	return "", nil
+	incorrectReg := `[^\-|^\+|^\d|^[:space:]]`
+	numReg, _ := regexp.Compile(`\d`)
+	myError := MyCustomError{Message: "input contains characters, that are not numbers, +, - or whitespace"}
+	if len(input) < 1 || input == " " {
+		return "", fmt.Errorf("%w", errorEmptyInput)
+	}
+	findNum := numReg.FindAllString(input, -1)
+	if len(findNum) != 2 {
+		return "", fmt.Errorf("%w", errorNotTwoOperands)
+	}
+	matched, _ := regexp.Match(incorrectReg, []byte(input))
+	if matched {
+		return "", fmt.Errorf("%s", myError.Error())
+	}
+
+	re, _ := regexp.Compile(`\-|\+|\d`)
+	res := re.FindAllString(input, -1)
+
+	result := 0
+	for i := 0; i < len(res)-1; i++ {
+		x, _ := strconv.Atoi(res[i+1])
+		if res[i] == "-" {
+			result = result - x
+			i++
+			continue
+		}
+		if res[i] == "+" {
+			result = result + x
+			i++
+			continue
+		}
+		z, _ := strconv.Atoi(res[i])
+		result = result + z
+	}
+	return strconv.Itoa(result), nil
 }
